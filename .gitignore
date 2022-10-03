@@ -107,6 +107,7 @@ dist
 # vuepress v2.x temp and cache directory
 .temp
 
+
 # Docusaurus cache and generated files
 .docusaurus
 
@@ -142,3 +143,6 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+#temp files
+/temp
