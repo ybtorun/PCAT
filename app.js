@@ -1,27 +1,49 @@
-const express = require('express');
+//3. party moduller
+const express = require('express'); 
+const mongoose = require('mongoose'); 
+const fileUpload = require('express-fileupload'); 
+const methodOverride = require('method-override'); //tarayıcı üzerinde put request olmadığından post request üzerinden yapabilmek için kullanıyoruz
+
+//çekirdek moduller
 const ejs = require('ejs');
-const path = require('path');
+
+//kendi oluşturduğumuz moduller
+const photoControllers = require('./controllers/photoControllers'); //controllers ları almak 
+const pageControllers = require('./controllers/pageControllers');
 
 const app = express();
+
+//connect db
+mongoose.connect('mongodb://127.0.0.1:27017/pcat-test-db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  // useFindAndModify: false
+});
 
 //Template engine
 app.set('view engine', 'ejs');
 
 //Middlewares
-app.use(express.static('public'));
+app.use(express.static('public')); //projemizin statik dosyaları public klasörü altında
+app.use(express.urlencoded({ extended: true })); //photo ekleme req-res döngüsü sonlandırma için kullandık (url deki datayı okumaya yarıyor.)
+app.use(express.json()); //photo ekleme req-res döngüsü sonlandırma için kullandık. ( url deki datayı json a çeviriyor)
+app.use(fileUpload()); //express file upload middleware
+app.use(methodOverride('_method' , {
+  methods:['POST', 'GET'] //hangi methodların gerektiğinde override yapılmasını belirttik. html PUT VE DELETE requesti bu methodları override yaparak kullanıyor.
+})); 
 
 //Routes
-app.get('/', (req, res) => {
-  res.render('index');
-});
+app.get('/', photoControllers.getAllPhotos); //list all photo
+app.get('/photos/:id', photoControllers.getPhoto); //get a photo
+app.post('/photos', photoControllers.createPhoto); //add a photo
+app.put('/photos/:id', photoControllers.updatePhoto); //update a photo info
+app.delete('/photos/:id', photoControllers.deletePhoto); //delete a photo
 
-app.get('/about', (req, res) => {
-  res.render('about');
-});
+app.get('/about', pageControllers.getAboutPage);
+app.get('/add', pageControllers.getAddPage);
+app.get('/photos/edit/:id', pageControllers.getEditPage);
 
-app.get('/add', (req, res) => {
-  res.render('add');
-});
+
 
 const port = 3000;
 app.listen(port, () => {
