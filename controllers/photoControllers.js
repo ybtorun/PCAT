@@ -5,10 +5,27 @@ const Photo = require('../models/Photo'); //kendi oluşturduğumuz mongo db içi
 
 //mongodb den tüm photo bilgilerini alıp index sayfasında listeledik
 exports.getAllPhotos = async (req, res) => {
-  const photos = await Photo.find({}).sort('-dateCreated'); //tersten sıralama
-  res.render('index', {
-    photos, //photos:photos anahtar ile değer aynı olunca bu şekilde tek yazılır.
+  const page = req.query.page || 1;
+  const photosPerPage = 3; // Her sayfada bulunan fotoğraf sayısı
+
+  const totalPhotos = await Photo.find().countDocuments(); // Toplam fotoğraf sayısı
+
+  const photos = await Photo.find({}) // Fotoğrafları alıyoruz 
+  .sort('-dateCreated')// Fotoğrafları sıralıyoruz
+  .skip((page-1)*photosPerPage ) //bulunduğumuz sayfa içinde  gösterilecek fotograflar
+  .limit(photosPerPage)  // Her sayfada olmasını istediğimi Fotograf sayısını sınırlıyoruz.
+  
+    res.render('index', {
+    photos: photos,
+    current: page,
+    pages: Math.ceil(totalPhotos / photosPerPage)
   });
+
+  // const photos = await Photo.find({}).sort('-dateCreated'); //tersten sıralama
+  // res.render('index', {
+  //   photos, 
+  // });
+
 };
 
 //herbir fotograf için tekil sayfalara oluşturduk
