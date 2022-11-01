@@ -147,5 +147,3 @@ dist
 #temp files
 /temp
 temp/*
-/public
-public/*
