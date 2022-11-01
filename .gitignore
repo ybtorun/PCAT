@@ -147,3 +147,6 @@ dist
 #temp files
 /temp
 temp/*
+
+#config variables
+config

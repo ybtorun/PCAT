@@ -14,13 +14,15 @@ const pageControllers = require('./controllers/pageControllers');
 const app = express();
 
 //connect db
-mongoose.connect(`mongodb+srv://${process.env.USER_ID}:${process.env.USER_KEY}@cluster0.c5t4oaw.mongodb.net/?retryWrites=true&w=majority',//'mongodb://127.0.0.1:27017/pcat-test-db`, 
+mongoose.connect('mongodb+srv://yusuf:UIRa0GalkNUE3eqK@cluster0.c5t4oaw.mongodb.net/?retryWrites=true&w=majority',//'mongodb://127.0.0.1:27017/pcat-test-db`, 
 {                
   useNewUrlParser: true,
   useUnifiedTopology: true,
   // useFindAndModify: false
 }).then(() => {
+  console.log(process.env)
   console.log('DB CONNECTED')
+  
 }).catch((err) => {
   console.log(err)
 })
@@ -54,3 +56,4 @@ const port = process.env.PORT || 5000; //3000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda başlatıldı..`);
 });
+
