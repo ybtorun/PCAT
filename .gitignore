@@ -149,4 +149,4 @@ dist
 temp/*
 
 #config variables
-config
+config.js
